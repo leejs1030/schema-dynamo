@@ -76,7 +76,7 @@ export class GetSchema implements IGetSchema {
   }
 
   async getTableLists(
-    { prefix, exclude }: { prefix: string; exclude: boolean } = {
+    { prefix = '', exclude = false }: { prefix?: string; exclude?: boolean } = {
       prefix: '',
       exclude: false,
     }
