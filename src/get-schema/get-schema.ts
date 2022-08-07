@@ -1,15 +1,14 @@
 import DynamoDB, {
   AttributeDefinitions,
   CreateTableInput,
-  DocumentClient,
   GlobalSecondaryIndex,
-  GlobalSecondaryIndexList,
   KeySchema,
   LocalSecondaryIndex,
   TableDescription,
 } from 'aws-sdk/clients/dynamodb';
+import { IGetSchema } from './i-get-schema';
 
-export class GetSchema {
+export class GetSchema implements IGetSchema {
   private readonly dynamoService: DynamoDB;
   constructor(dynamoService: DynamoDB) {
     this.dynamoService = dynamoService;
@@ -100,11 +99,15 @@ export class GetSchema {
       .then((data) => data.Table);
   }
 
-  async getSchema(TableName: string | string[]) {
-    if (Array.isArray(TableName))
-      return TableName.map((name) =>
-        this.describeTable(name).then(this.parseCreateTableInput)
-      );
+  async getSchema(TableName: string) {
     return this.describeTable(TableName).then(this.parseCreateTableInput);
+  }
+
+  async getSchemas(TableName: string[]): Promise<DynamoDB.CreateTableInput[]> {
+    return Promise.all(
+      TableName.map((name) =>
+        this.describeTable(name).then(this.parseCreateTableInput)
+      )
+    );
   }
 }
