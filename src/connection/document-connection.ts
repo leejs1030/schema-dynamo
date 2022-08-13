@@ -3,7 +3,7 @@ import { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
 import { DynamoSchemaError } from '../errors';
 
 export class DocumentConnection {
-  document: DynamoDB.DocumentClient;
+  private readonly document: DynamoDB.DocumentClient;
 
   constructor(
     params: DynamoDB.DocumentClient.DocumentClientOptions &
