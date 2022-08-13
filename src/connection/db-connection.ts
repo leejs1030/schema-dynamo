@@ -1,5 +1,6 @@
 import { AWSError, DynamoDB } from 'aws-sdk';
 import { PromiseResult } from 'aws-sdk/lib/request';
+import { WaiterConfiguration } from 'aws-sdk/lib/service';
 
 export class DbConnection {
   private readonly db: DynamoDB;
@@ -14,203 +15,206 @@ export class DbConnection {
     return this.db.describeTable(params).promise();
   }
 
-  batchExecuteStatement(params) {
+  batchExecuteStatement(params: DynamoDB.BatchExecuteStatementInput) {
     return this.db.batchExecuteStatement(params).promise();
   }
 
-  batchGetItem(params) {
+  batchGetItem(params: DynamoDB.BatchGetItemInput) {
     return this.db.batchGetItem(params).promise();
   }
 
-  batchWriteItem(params) {
+  batchWriteItem(params: DynamoDB.BatchWriteItemInput) {
     return this.db.batchWriteItem(params).promise();
   }
 
-  createBackup(params) {
+  createBackup(params: DynamoDB.CreateBackupInput) {
     return this.db.createBackup(params).promise();
   }
 
-  createGlobalTable(params) {
+  createGlobalTable(params: DynamoDB.CreateGlobalTableInput) {
     return this.db.createGlobalTable(params).promise();
   }
 
-  createTable(params) {
+  createTable(params: DynamoDB.CreateTableInput) {
     return this.db.createTable(params).promise();
   }
 
-  deleteBackup(params) {
+  deleteBackup(params: DynamoDB.DeleteTableInput) {
     return this.db.deleteTable(params).promise();
   }
 
-  deleteItem(params) {
+  deleteItem(params: DynamoDB.DeleteItemInput) {
     return this.db.deleteItem(params).promise();
   }
 
-  deleteTable(params) {
+  deleteTable(params: DynamoDB.DeleteTableInput) {
     return this.db.deleteTable(params).promise();
   }
 
-  describeBackup(params) {
+  describeBackup(params: DynamoDB.DescribeBackupInput) {
     return this.db.describeBackup(params).promise();
   }
 
-  describeContinuousBackups(params) {
+  describeContinuousBackups(params: DynamoDB.DescribeContinuousBackupsInput) {
     return this.db.describeContinuousBackups(params).promise();
   }
 
-  describeContributorInsights(params) {
+  describeContributorInsights(params: DynamoDB.DescribeContributorInsightsInput) {
     return this.db.describeContributorInsights(params).promise();
   }
 
-  describeEndpoints(params) {
+  describeEndpoints(params: DynamoDB.DescribeEndpointsRequest) {
     return this.db.describeEndpoints(params).promise();
   }
 
-  describeExport(params) {
+  describeExport(params: DynamoDB.DescribeExportInput) {
     return this.db.describeExport(params).promise();
   }
 
-  describeGlobalTable(params) {
+  describeGlobalTable(params: DynamoDB.DescribeGlobalTableInput) {
     return this.db.describeGlobalTable(params).promise();
   }
 
-  describeGlobalTableSettings(params) {
+  describeGlobalTableSettings(params: DynamoDB.DescribeGlobalTableSettingsInput) {
     return this.db.describeGlobalTableSettings(params).promise();
   }
 
-  describeKinesisStreamingDestination(params) {
+  describeKinesisStreamingDestination(params: DynamoDB.DescribeKinesisStreamingDestinationInput) {
     return this.db.describeKinesisStreamingDestination(params).promise();
   }
 
-  describeLimits(params) {
+  describeLimits(params: DynamoDB.DescribeLimitsInput) {
     return this.db.describeLimits(params).promise();
   }
 
-  describeTableReplicaAutoScaling(params) {
+  describeTableReplicaAutoScaling(params: DynamoDB.DescribeTableReplicaAutoScalingInput) {
     return this.db.describeTableReplicaAutoScaling(params).promise();
   }
 
-  describeTimeToLive(params) {
+  describeTimeToLive(params: DynamoDB.DescribeTimeToLiveInput) {
     return this.db.describeTimeToLive(params).promise();
   }
 
-  disableKinesisStreamingDestination(params) {
+  disableKinesisStreamingDestination(params: DynamoDB.KinesisStreamingDestinationInput) {
     return this.db.disableKinesisStreamingDestination(params).promise();
   }
 
-  enableKinesisStreamingDestination(params) {
+  enableKinesisStreamingDestination(params: DynamoDB.KinesisStreamingDestinationInput) {
     return this.db.enableKinesisStreamingDestination(params).promise();
   }
 
-  executeStatement(params) {
+  executeStatement(params: DynamoDB.ExecuteStatementInput) {
     return this.db.executeStatement(params).promise();
   }
 
-  executeTransaction(params) {
+  executeTransaction(params: DynamoDB.ExecuteTransactionInput) {
     return this.db.executeTransaction(params).promise();
   }
 
-  exportTableToPointInTime(params) {
+  exportTableToPointInTime(params: DynamoDB.ExportTableToPointInTimeInput) {
     return this.db.exportTableToPointInTime(params).promise();
   }
 
-  getItem(params) {
+  getItem(params: DynamoDB.GetItemInput) {
     return this.db.getItem(params).promise();
   }
 
-  listBackups(params) {
+  listBackups(params: DynamoDB.ListBackupsInput) {
     return this.db.listBackups(params).promise();
   }
 
-  listContributorInsights(params) {
+  listContributorInsights(params: DynamoDB.ListContributorInsightsInput) {
     return this.db.listContributorInsights(params).promise();
   }
 
-  listExports(params) {
+  listExports(params: DynamoDB.ListExportsInput) {
     return this.db.listExports(params).promise();
   }
 
-  listGlobalTables(params) {
+  listGlobalTables(params: DynamoDB.ListGlobalTablesInput) {
     return this.db.listGlobalTables(params).promise();
   }
 
-  listTables(params) {
+  listTables(params: DynamoDB.ListTablesInput) {
     return this.db.listTables(params).promise();
   }
 
-  listTagsOfResource(params) {
+  listTagsOfResource(params: DynamoDB.ListTagsOfResourceInput) {
     return this.db.listTagsOfResource(params).promise();
   }
 
-  putItem(params) {
+  putItem(params: DynamoDB.PutItemInput) {
     return this.db.putItem(params).promise();
   }
 
-  query(params) {
+  query(params: DynamoDB.QueryInput) {
     return this.db.query(params).promise();
   }
 
-  restoreTableFromBackup(params) {
+  restoreTableFromBackup(params: DynamoDB.RestoreTableFromBackupInput) {
     return this.db.restoreTableFromBackup(params).promise();
   }
 
-  restoreTableToPointInTime(params) {
+  restoreTableToPointInTime(params: DynamoDB.RestoreTableToPointInTimeInput) {
     return this.db.restoreTableToPointInTime(params).promise();
   }
 
-  scan(params) {
+  scan(params: DynamoDB.ScanInput) {
     return this.db.scan(params).promise();
   }
 
-  tagResource(params) {
+  tagResource(params: DynamoDB.TagResourceInput) {
     return this.db.tagResource(params).promise();
   }
 
-  transactGetItems(params) {
+  transactGetItems(params: DynamoDB.TransactGetItemsInput) {
     return this.db.transactGetItems(params).promise();
   }
 
-  transactWriteItems(params) {
+  transactWriteItems(params: DynamoDB.TransactWriteItemsInput) {
     return this.db.transactWriteItems(params).promise();
   }
 
-  untagResource(params) {
+  untagResource(params: DynamoDB.UntagResourceInput) {
     return this.db.untagResource(params).promise();
   }
 
-  updateContinuousBackups(params) {
+  updateContinuousBackups(params: DynamoDB.UpdateContinuousBackupsInput) {
     return this.db.updateContinuousBackups(params).promise();
   }
 
-  updateContributorInsights(params) {
+  updateContributorInsights(params: DynamoDB.UpdateContributorInsightsInput) {
     return this.db.updateContributorInsights(params).promise();
   }
 
-  updateGlobalTable(params) {
+  updateGlobalTable(params: DynamoDB.UpdateGlobalTableInput) {
     return this.db.updateGlobalTable(params).promise();
   }
 
-  updateGlobalTableSettings(params) {
+  updateGlobalTableSettings(params: DynamoDB.UpdateGlobalTableSettingsInput) {
     return this.db.updateGlobalTableSettings(params).promise();
   }
 
-  updateItem(params) {
+  updateItem(params: DynamoDB.UpdateItemInput) {
     return this.db.updateItem(params).promise();
   }
 
-  updateTable(params) {
+  updateTable(params: DynamoDB.UpdateTableInput) {
     return this.db.updateTable(params).promise();
   }
 
-  updateTableReplicaAutoScaling(params) {
+  updateTableReplicaAutoScaling(params: DynamoDB.UpdateTableReplicaAutoScalingInput) {
     return this.db.updateTableReplicaAutoScaling(params).promise();
   }
 
-  updateTimeToLive(params) {
+  updateTimeToLive(params: DynamoDB.UpdateTimeToLiveInput) {
     return this.db.updateTimeToLive(params).promise();
   }
 
-  waitFor(state, params) {
-    return this.db.waitFor(state, params).promise();
+  waitFor(
+    state: 'tableExists' | 'tableNotExists',
+    params: DynamoDB.DescribeTableInput & { $waiter?: WaiterConfiguration },
+  ) {
+    return this.db.waitFor(state as any, params).promise();
   }
 }
