@@ -1,8 +1,9 @@
 import { ClientConfiguration, ListTablesInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { DbConnection } from '../../connection/db-connection';
+import { IGetSchema } from './i-get-schema';
 
-export class GetSchema {
+export class GetSchema implements IGetSchema {
   private readonly db: DbConnection;
 
   constructor(params: ClientConfiguration) {
