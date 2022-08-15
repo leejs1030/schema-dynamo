@@ -1,5 +1,5 @@
 {
-  "name": "dynamo-schema",
+  "name": "schema-dynamo",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leejs1030/dynamo-schema.git"
+    "url": "git+https://github.com/leejs1030/schema-dynamo.git"
   },
   "keywords": [
     "DynamoDb",
@@ -18,9 +18,9 @@
   "author": "leejs1030",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/leejs1030/dynamo-schema/issues"
+    "url": "https://github.com/leejs1030/schema-dynamo/issues"
   },
-  "homepage": "https://github.com/leejs1030/dynamo-schema#readme",
+  "homepage": "https://github.com/leejs1030/schema-dynamo#readme",
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
     "@types/jest": "^28.1.6",
