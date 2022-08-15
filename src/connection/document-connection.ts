@@ -1,6 +1,6 @@
 import { DynamoDB } from 'aws-sdk';
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
-import { DynamoSchemaError } from '../errors';
+import { SchemaDynamoError } from '../errors';
 
 export class DocumentConnection {
   private readonly document: DynamoDB.DocumentClient;
@@ -25,7 +25,7 @@ export class DocumentConnection {
       .batchGet(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -34,7 +34,7 @@ export class DocumentConnection {
       .batchWrite(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -43,7 +43,7 @@ export class DocumentConnection {
       .delete(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -52,7 +52,7 @@ export class DocumentConnection {
       .get(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -61,7 +61,7 @@ export class DocumentConnection {
       .put(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -70,7 +70,7 @@ export class DocumentConnection {
       .query(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -79,7 +79,7 @@ export class DocumentConnection {
       .scan(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -88,7 +88,7 @@ export class DocumentConnection {
       .update(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -97,7 +97,7 @@ export class DocumentConnection {
       .transactGet(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 
@@ -106,7 +106,7 @@ export class DocumentConnection {
       .transactWrite(params)
       .promise()
       .catch((err) => {
-        throw new DynamoSchemaError(err);
+        throw new SchemaDynamoError(err);
       });
   }
 }
