@@ -1,4 +1,6 @@
 {
   "prettier.singleQuote": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.run": "onSave",
+  "eslint.trace.server": "verbose"
 }
