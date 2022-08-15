@@ -17,10 +17,18 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "typeRoots": ["node_modules/@types/", "src/@types/"],
+    "typeRoots": [
+      "node_modules/@types/",
+      "src/@types/"
+    ],
     "paths": {
-      "passport": ["src/@types/passport"]
-    }
+      "passport": [
+        "src/@types/passport"
+      ]
+    },
+    "esModuleInterop": true
   },
-  "exclude": ["**/*js"]
+  "exclude": [
+    "**/*js"
+  ]
 }
