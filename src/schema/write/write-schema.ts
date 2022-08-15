@@ -2,6 +2,7 @@ import { ClientConfiguration, ListTablesInput } from 'aws-sdk/clients/dynamodb';
 import { GetSchema } from '../get/get-schema';
 import fs from 'fs';
 import path from 'path';
+import prettier from 'prettier';
 
 export class WriteSchema {
   private readonly getSchema: GetSchema;
@@ -12,7 +13,12 @@ export class WriteSchema {
 
   async writeSchema(fileDirectory: string, TableName: string) {
     const schema = await this.getSchema.getSchema(TableName);
-    return fs.writeFileSync(path.join(fileDirectory, schema.TableName), JSON.stringify(schema));
+    return fs.writeFileSync(
+      path.join(fileDirectory, `${schema.TableName}.json`),
+      prettier.format(`module.exports = ${JSON.stringify(schema)}`, {
+        parser: 'typescript',
+      }),
+    );
   }
 
   async writeSchemas(
@@ -22,7 +28,12 @@ export class WriteSchema {
   ) {
     const schemas = await this.getSchema.getSchemas(params, prefix);
     return schemas.map((schema) =>
-      fs.writeFileSync(path.join(fileDirectory, schema.TableName), JSON.stringify(schema)),
+      fs.writeFileSync(
+        path.join(fileDirectory, `${schema.TableName}.json`),
+        prettier.format(`module.exports = ${JSON.stringify(schema)}`, {
+          parser: 'typescript',
+        }),
+      ),
     );
   }
 }
