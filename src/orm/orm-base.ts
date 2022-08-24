@@ -1,13 +1,13 @@
 import { DocumentConnection } from '../connection/document-connection';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 
+type LocalSecondaryIndex = DocumentClient.LocalSecondaryIndex;
+type GlobalSecondaryIndex = DocumentClient.GlobalSecondaryIndex;
+
 export abstract class OrmBase {
   protected readonly TableName: string;
   protected readonly document: DocumentConnection;
-  protected readonly Indexes: (
-    | DocumentClient.LocalSecondaryIndex
-    | DocumentClient.GlobalSecondaryIndex
-  )[];
+  protected readonly Indexes: (LocalSecondaryIndex | GlobalSecondaryIndex)[];
 
   protected readonly key: DocumentClient.KeySchema;
 
