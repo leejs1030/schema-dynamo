@@ -1,31 +1,29 @@
 import { DocumentConnection } from '../connection/document-connection';
+import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 
 export abstract class OrmBase {
   protected readonly TableName: string;
   protected readonly document: DocumentConnection;
+  protected readonly Indexes: (
+    | DocumentClient.LocalSecondaryIndex
+    | DocumentClient.GlobalSecondaryIndex
+  )[];
 
-  constructor(document: DocumentConnection, TableName: string) {
+  protected readonly key: DocumentClient.KeySchema;
+
+  constructor(document: DocumentConnection, TableSchema: DocumentClient.CreateTableInput) {
     this.document = document;
-    this.TableName = TableName;
+    this.TableName = TableSchema.TableName;
+    this.key = TableSchema.KeySchema;
+    this.Indexes = [...TableSchema.LocalSecondaryIndexes, ...TableSchema.GlobalSecondaryIndexes];
   }
 
-  scan() {
-    return this.document.scan({
-      TableName: this.TableName,
-    });
+  async findOne() {
+    throw new Error('to be defined!');
   }
 
-  get() {
-    return this.document.get({
-      TableName: this.TableName,
-      Key: {},
-    });
-  }
-
-  query() {
-    return this.document.query({
-      TableName: this.TableName,
-    });
+  async findMany() {
+    throw new Error('to be defined!');
   }
 
   put() {
