@@ -25,9 +25,6 @@ export class Orm {
     this.globalIndices = parseSchema.parseGlobalIndex();
     this.localIndices = parseSchema.parseLocalIndex();
 
-    console.log(this.globalIndices);
-    console.log(this.localIndices);
-
     this.indexFinder = new IndexFinder(this.primaryKey, this.globalIndices, this.localIndices);
   }
 
