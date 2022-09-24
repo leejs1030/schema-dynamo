@@ -5,8 +5,7 @@ import {
   KeySchemaElement,
   LocalSecondaryIndexList,
 } from 'aws-sdk/clients/dynamodb';
-import PrimaryKey = Typing.PrimaryKey;
-import DynamoIndex = Typing.DynamoIndex;
+import { DynamoIndex, PrimaryKey } from '../../typing/typing';
 
 export class ParseSchema {
   private readonly typeMapper = { S: 'string', N: 'number', B: 'binary' };
@@ -52,10 +51,10 @@ export class ParseSchema {
   }
 
   parseLocalIndex(): DynamoIndex[] {
-    return this.parseIndex(this.schema.LocalSecondaryIndexes);
+    return this.parseIndex(this.schema.LocalSecondaryIndexes || []);
   }
 
   parseGlobalIndex(): DynamoIndex[] {
-    return this.parseIndex(this.schema.GlobalSecondaryIndexes);
+    return this.parseIndex(this.schema.GlobalSecondaryIndexes || []);
   }
 }
