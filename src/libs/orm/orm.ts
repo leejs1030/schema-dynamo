@@ -10,8 +10,8 @@ export class Orm {
   private readonly indexFinder: IndexFinder;
   private readonly tableName: string;
   private readonly primaryKey: PrimaryKey;
-  private readonly globalIndex?: DynamoIndex[];
-  private readonly localIndex?: DynamoIndex[];
+  private readonly globalIndices?: DynamoIndex[];
+  private readonly localIndices?: DynamoIndex[];
 
   constructor(
     schema: DocumentClient.CreateTableInput,
@@ -22,10 +22,13 @@ export class Orm {
 
     this.tableName = schema.TableName;
     this.primaryKey = parseSchema.parsePrimaryKey();
-    this.globalIndex = parseSchema.parseGlobalIndex();
-    this.localIndex = parseSchema.parseLocalIndex();
+    this.globalIndices = parseSchema.parseGlobalIndex();
+    this.localIndices = parseSchema.parseLocalIndex();
 
-    this.indexFinder = new IndexFinder(this.primaryKey, this.globalIndex, this.localIndex);
+    console.log(this.globalIndices);
+    console.log(this.localIndices);
+
+    this.indexFinder = new IndexFinder(this.primaryKey, this.globalIndices, this.localIndices);
   }
 
   async findUnique(params: { where: { [key: string]: string | number | Buffer } }) {
