@@ -5,8 +5,9 @@ import { DbConnection } from '../../connection/db-connection';
 export class GetSchema {
   private readonly db: DbConnection;
 
-  constructor(params: ClientConfiguration) {
-    this.db = new DbConnection(params);
+  constructor(params: ClientConfiguration | DbConnection) {
+    if (params instanceof DbConnection) this.db = params;
+    else this.db = new DbConnection(params);
   }
 
   async getSchema(TableName: string) {
