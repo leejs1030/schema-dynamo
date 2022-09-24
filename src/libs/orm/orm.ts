@@ -4,7 +4,7 @@ import { DocumentConnection } from '../../connection/document-connection';
 import { ParseSchema } from '../../schema/parse/parse-schema';
 import { DynamoSchemaError } from '../../errors';
 import { IndexFinder } from './index-finder';
-import { DynamoIndex, PrimaryKey } from '../../typing/typing';
+import { AllowedKeyTypes, DynamoIndex, FindInput, Operator, PrimaryKey } from '../../typing/typing';
 
 export class Orm {
   private readonly indexFinder: IndexFinder;
@@ -28,7 +28,7 @@ export class Orm {
     this.indexFinder = new IndexFinder(this.primaryKey, this.globalIndices, this.localIndices);
   }
 
-  async findUnique(params: { where: { [key: string]: string | number | Buffer } }) {
+  async findUnique(params: { where: { [key: string]: AllowedKeyTypes } }) {
     const { where } = params;
     const keys = Object.keys(where);
     const values = keys.map((key) => where[key]);
@@ -37,5 +37,30 @@ export class Orm {
       throw new DynamoSchemaError('this is not primary key!');
 
     return this.documentClient.get({ TableName: this.tableName, Key: where });
+  }
+
+  async find(params: FindInput): Promise<any> {
+    const { where } = params;
+    const and = where[Operator.and];
+    const or = where[Operator.or];
+
+    delete where[Operator.and];
+    delete where[Operator.or];
+
+    const keys = JSON.stringify(where) !== '{}' ? where : null;
+
+    let keysCount = 0;
+    if (and) keysCount++;
+    if (or) keysCount++;
+    if (keys) keysCount++;
+
+    if (keysCount > 1) throw new DynamoSchemaError('to many where conditions!');
+
+    let result;
+    if (and) result = and;
+    if (or) result = or;
+    if (keys) result = keys;
+
+    return result;
   }
 }

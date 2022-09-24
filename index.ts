@@ -1,5 +1,6 @@
 import { GetSchema } from './src/schema/get/get-schema';
 import { SchemaDynamo } from './src/libs/orm/schema-dynamo';
+import { Operator } from './src/typing/typing';
 
 const AWS_REGION = 'local-env';
 const AWS_ENDPOINT = 'http://localhost:8000';
@@ -28,6 +29,12 @@ const main = async () => {
     where: { owner: '627488dc72de653d5935822a', created: '2022-07-07T02:40:22' },
   });
   console.log(x);
+
+  const keys = await CatalogLog.find({
+    where: { [Operator.and]: [{ value: { [Operator.eq]: 1 } }] },
+  });
+
+  console.log(keys);
 };
 
 main();
