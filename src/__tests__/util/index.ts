@@ -20,9 +20,11 @@ export const numToUserObject = (num: number) => ({
 export const pointCount = 1000;
 
 export const numToDate = (num: number) => {
+  const month = numToString((((num + 1) * 27) % 12) + 1, 2);
   const date = numToString(((num * 27) % 30) + 1, 2);
   const hour = numToString(num % 24, 2);
-  return new Date(`2022-09-${date}T${hour}:00:00.000Z`);
+  const minute = numToString(num % 59, 2);
+  return new Date(`2022-${month}-${date}T${hour}:${minute}:00.000Z`);
 };
 
 export const numToCreatedAt = (num: number) => numToDate(num).toISOString();
@@ -35,7 +37,7 @@ export const numToTypeId = (num: number) => {
   return `${currentType}.${currentDate.getTime()}`;
 };
 
-export const numToPoint = (num: number) => ((num + 7) % 10) * 1000;
+export const numToPoint = (num: number) => (((num + 7) * 23) % 100) * 10000;
 
 export const numToPointObject = (num: number) => ({
   userId: numToUserId(num % userCount),
