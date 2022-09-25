@@ -3,9 +3,11 @@ import { DbConnection } from '../../connection/db-connection';
 import { DocumentConnection } from '../../connection/document-connection';
 import { AllowedKeyTypes, FindInput } from '../../typing/typing';
 import { QueryBuilder } from '../query-builder/query-builder';
+import { IOrm } from './i-orm';
+import { IQueryBuilder } from '../query-builder/i-query-builder';
 
-export class Orm {
-  private readonly queryBuilder: QueryBuilder;
+export class Orm implements IOrm {
+  private readonly queryBuilder: IQueryBuilder;
 
   constructor(
     schema: DocumentClient.CreateTableInput,
@@ -16,7 +18,7 @@ export class Orm {
   }
 
   async findUnique(params: { where: { [key: string]: AllowedKeyTypes } }) {
-    const query = this.queryBuilder.buildGetQueryParams(params);
+    const query = this.queryBuilder.buildFindUniqueParams(params);
     return this.documentClient.get(query);
   }
 
@@ -26,8 +28,8 @@ export class Orm {
     return !!(params.IndexName || (params as any).KeyConditionExpression);
   }
 
-  async find(params: FindInput): Promise<any> {
-    const query = this.queryBuilder.buildQueryQueryParams(params);
+  async findMany(params: FindInput) {
+    const query = this.queryBuilder.buildFindManyParams(params);
     if (this.canBeQueried(query)) return this.documentClient.query(query);
     return this.documentClient.scan(query);
   }

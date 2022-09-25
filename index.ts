@@ -1,6 +1,7 @@
 import { GetSchema } from './src/schema/get/get-schema';
 import { SchemaDynamo } from './src/libs/schema-dynamo/schema-dynamo';
 import { Operator } from './src/typing/typing';
+import { ISchemaDynamo } from './src/libs/schema-dynamo/i-schema-dynamo';
 
 const AWS_REGION = 'local-env';
 const AWS_ENDPOINT = 'http://localhost:8000';
@@ -16,7 +17,7 @@ const getSchema = new GetSchema({
 
 const main = async () => {
   const CatalogLogSchema = await getSchema.getSchema('test.cw.catalog.log');
-  const schemaDynamo = new SchemaDynamo({
+  const schemaDynamo: ISchemaDynamo = new SchemaDynamo({
     endpoint: AWS_ENDPOINT,
     region: AWS_REGION,
     accessKeyId: AWS_ACCES_KEY_ID,
@@ -30,7 +31,7 @@ const main = async () => {
   });
   console.log(x);
 
-  const keys = await CatalogLog.find({
+  const keys = await CatalogLog.findMany({
     where: { [Operator.and]: [{ value: { [Operator.eq]: 1 } }] },
   });
 

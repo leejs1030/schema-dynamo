@@ -1,7 +1,8 @@
 import { DynamoSchemaError } from '../../errors';
 import { DynamoIndex, PrimaryKey } from '../../typing/typing';
+import { IIndexFinder } from './i-index-finder';
 
-export class IndexFinder {
+export class IndexFinder implements IIndexFinder {
   private readonly primaryLength: number;
   constructor(
     private readonly primaryKey: PrimaryKey,

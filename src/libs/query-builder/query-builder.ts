@@ -3,9 +3,11 @@ import { ParseSchema } from '../../schema/parse/parse-schema';
 import { IndexFinder } from '../index-finder/index-finder';
 import { AllowedKeyTypes, DynamoIndex, FindInput, Operator, PrimaryKey } from '../../typing/typing';
 import { DynamoSchemaError } from '../../errors';
+import { IQueryBuilder } from './i-query-builder';
+import { IIndexFinder } from '../index-finder/i-index-finder';
 
-export class QueryBuilder {
-  private readonly indexFinder: IndexFinder;
+export class QueryBuilder implements IQueryBuilder {
+  private readonly indexFinder: IIndexFinder;
   private readonly tableName: string;
   private readonly primaryKey: PrimaryKey;
   private readonly globalIndices?: DynamoIndex[];
@@ -22,7 +24,7 @@ export class QueryBuilder {
     this.indexFinder = new IndexFinder(this.primaryKey, this.globalIndices, this.localIndices);
   }
 
-  buildGetQueryParams(params: {
+  buildFindUniqueParams(params: {
     where: { [key: string]: AllowedKeyTypes };
   }): DocumentClient.GetItemInput {
     const { where } = params;
@@ -35,7 +37,7 @@ export class QueryBuilder {
     return { TableName: this.tableName, Key: where };
   }
 
-  buildQueryQueryParams(params: FindInput): DocumentClient.QueryInput | DocumentClient.ScanInput {
+  buildFindManyParams(params: FindInput): DocumentClient.QueryInput | DocumentClient.ScanInput {
     const { where } = params;
     const and = where[Operator.and];
     const or = where[Operator.or];
