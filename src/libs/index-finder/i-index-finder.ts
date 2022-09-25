@@ -1,7 +1,11 @@
 export interface IIndexFinder {
   isPrimaryKey(keys: string[], values: Array<string | number | Buffer>): boolean;
 
-  isIndex(keys: string[], values: Array<string | number | Buffer>): number;
+  getMatchingLength(
+    keys: string[],
+    values: Array<string | number | Buffer>,
+    indexName?: string,
+  ): number;
 
   findPossibleIndex(keys: string[], values: Array<string | number | Buffer>): string[];
 }

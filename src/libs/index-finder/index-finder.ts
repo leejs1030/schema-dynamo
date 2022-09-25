@@ -51,7 +51,11 @@ export class IndexFinder implements IIndexFinder {
     return [];
   }
 
-  isIndex(keys: string[], values: Array<string | number | Buffer>): boolean {
-    return false;
+  getMatchingLength(
+    keys: string[],
+    values: Array<string | number | Buffer>,
+    indexName?: string,
+  ): number {
+    return 1;
   }
 }

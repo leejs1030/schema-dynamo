@@ -61,47 +61,59 @@ describe('IndexFinder', () => {
 
   describe('isIndex', () => {
     it('correct matching local index', () => {
-      expect(indexFinder.isIndex(['hash', 'lsi1-range'], ['asdf', 3])).toBe(2);
-      expect(indexFinder.isIndex(['hash', 'lsi2-range'], ['asdf', new Buffer(1)])).toBe(1);
+      expect(indexFinder.getMatchingLength(['hash', 'lsi1-range'], ['asdf', 3], 'lsi1')).toBe(2);
+      expect(
+        indexFinder.getMatchingLength(['hash', 'lsi2-range'], ['asdf', new Buffer(1)], 'lsi2'),
+      ).toBe(1);
     });
 
     it('correct matching global index', () => {
-      expect(indexFinder.isIndex(['gsi1-hash', 'gsi1-range'], ['asdf', 3])).toBe(2);
-      expect(indexFinder.isIndex(['gsi2-hash', 'gsi2-range'], [2, 3])).toBe(2);
-      expect(indexFinder.isIndex(['gsi3-hash'], [new Buffer(1)])).toBe(1);
+      expect(indexFinder.getMatchingLength(['gsi1-hash', 'gsi1-range'], ['asdf', 3], 'gsi1')).toBe(
+        2,
+      );
+      expect(indexFinder.getMatchingLength(['gsi2-hash', 'gsi2-range'], [2, 3], 'gsi2')).toBe(2);
+      expect(indexFinder.getMatchingLength(['gsi3-hash'], [new Buffer(1)], 'gsi3')).toBe(1);
     });
 
     it('correct partial global index', () => {
-      expect(indexFinder.isIndex(['gsi1-hash'], ['asdf'])).toBe(1);
-      expect(indexFinder.isIndex(['gsi2-hash'], [2])).toBe(1);
+      expect(indexFinder.getMatchingLength(['gsi1-hash'], ['asdf'], 'gsi1')).toBe(1);
+      expect(indexFinder.getMatchingLength(['gsi2-hash'], [2], 'gsi2')).toBe(1);
     });
 
     it('correct matching primary key', () => {
-      expect(indexFinder.isIndex(['hash', 'range'], ['asdf', 3])).toBe(2);
+      expect(indexFinder.getMatchingLength(['hash', 'range'], ['asdf', 3])).toBe(2);
     });
 
     it('correct partial primary key', () => {
-      expect(indexFinder.isIndex(['hash'], ['asdf'])).toBe(1);
+      expect(indexFinder.getMatchingLength(['hash'], ['asdf'])).toBe(1);
     });
 
     it('cant match with only range key', () => {
-      expect(indexFinder.isIndex(['range'], [3])).toBeFalsy();
+      expect(indexFinder.getMatchingLength(['range'], [3])).toBeFalsy();
+    });
+
+    it('no matching column for index', () => {
+      expect(indexFinder.getMatchingLength(['zz', 'xx'], [2, 3], 'gsi2')).toBe(2);
     });
 
     it('length missmatch error', () => {
-      expect(() => indexFinder.isIndex(['range'], [3, 4])).toThrow();
+      expect(() => indexFinder.getMatchingLength(['range'], [3, 4])).toThrow();
     });
 
     it("can't find index", () => {
-      expect(indexFinder.isIndex(['gsi1zz-hash'], ['asdf'])).toBeFalsy();
+      expect(indexFinder.getMatchingLength(['gsi1-hash'], ['asdf'], 'strange')).toBeFalsy();
     });
 
     it('column except index', () => {
-      expect(indexFinder.isIndex(['gsi1-hash', 'gsi1-range', 'strange'], ['asdf', 3, 'asdf'])).toBe(
-        2,
-      );
-      expect(indexFinder.isIndex(['gsi1-hash', 'strange'], ['asdf', 3])).toBe(1);
-      expect(indexFinder.isIndex(['gsi1-range', 'strange'], [3, 'asdf'])).toBe(0);
+      expect(
+        indexFinder.getMatchingLength(
+          ['gsi1-hash', 'gsi1-range', 'strange'],
+          ['asdf', 3, 'asdf'],
+          'gsi1',
+        ),
+      ).toBe(2);
+      expect(indexFinder.getMatchingLength(['gsi1-hash', 'strange'], ['asdf', 3], 'gsi1')).toBe(1);
+      expect(indexFinder.getMatchingLength(['gsi1-range', 'strange'], [3, 'asdf'], 'gsi1')).toBe(0);
     });
   });
 });
