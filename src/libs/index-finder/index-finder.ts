@@ -13,9 +13,9 @@ export class IndexFinder implements IIndexFinder {
   }
 
   private isAllowedType(input: string | number | Buffer, toBe: string) {
-    if (typeof input === 'string') return toBe === 'string';
-    if (typeof input === 'number') return toBe === 'number';
-    if (input instanceof Buffer) return toBe === 'binary';
+    if (typeof input === 'string') return toBe === 'S';
+    if (typeof input === 'number') return toBe === 'N';
+    if (input instanceof Buffer) return toBe === 'B';
 
     return false;
   }

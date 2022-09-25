@@ -3,8 +3,9 @@ import { DbConnection } from '../../connection/db-connection';
 import { ClientConfiguration, DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { Orm } from '../orm/orm';
 import { IOrm } from '../orm/i-orm';
+import { ISchemaDynamo } from './i-schema-dynamo';
 
-export class SchemaDynamo {
+export class SchemaDynamo implements ISchemaDynamo {
   private readonly documentClient: DocumentConnection;
   private readonly dynamoDb: DbConnection;
 

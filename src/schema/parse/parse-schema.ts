@@ -8,8 +8,6 @@ import {
 import { DynamoIndex, PrimaryKey } from '../../typing/typing';
 
 export class ParseSchema {
-  private readonly typeMapper = { S: 'string', N: 'number', B: 'binary' };
-
   private readonly hash = 'HASH';
   private readonly sort = 'RANGE';
 
@@ -17,22 +15,26 @@ export class ParseSchema {
 
   private findHashOrSortKey(acc: PrimaryKey, cur: KeySchemaElement) {
     const { AttributeType } = this.findAttributeByName(cur.AttributeName);
-    const dataType = this.typeMapper[AttributeType];
 
     switch (cur.KeyType) {
       case this.hash:
-        acc.hashKey = { name: cur.AttributeName, dataType };
+        acc.hashKey = { name: cur.AttributeName, dataType: AttributeType };
         return acc;
       case this.sort:
-        acc.sortKey = { name: cur.AttributeName, dataType };
+        acc.sortKey = { name: cur.AttributeName, dataType: AttributeType };
         return acc;
     }
 
     return acc;
   }
 
-  private findAttributeByName(name: string) {
-    return this.schema.AttributeDefinitions.filter((value) => value.AttributeName === name)[0];
+  private findAttributeByName(name: string): {
+    AttributeName: string;
+    AttributeType: 'S' | 'N' | 'B';
+  } {
+    return this.schema.AttributeDefinitions.filter(
+      (value) => value.AttributeName === name,
+    )[0] as any;
   }
 
   private parseKeySchema(keySchema: KeySchema) {
