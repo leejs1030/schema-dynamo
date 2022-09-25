@@ -37,9 +37,23 @@ describe('IndexFinder', () => {
     },
   ];
   const indexFinder: IIndexFinder = new IndexFinder(primaryKey, globalIndex, localIndex);
+
   describe('isPrimaryKey', () => {
-    it('checkPrimaryKey', () => {
+    it('to be true', () => {
       expect(indexFinder.isPrimaryKey(['hash', 'range'], ['str', 1])).toBeTruthy();
+    });
+
+    it('wrong length', () => {
+      expect(() => indexFinder.isPrimaryKey(['hash', 'range', 'a'], ['str', 1, 3])).toThrow();
+      expect(() => indexFinder.isPrimaryKey(['hash', 'range'], ['str', 1, 3])).toThrow();
+    });
+
+    it('wrong name', () => {
+      expect(indexFinder.isPrimaryKey(['hash', 'asdfuihasdfkj'], ['str', 1])).toBeFalsy();
+    });
+
+    it('wrong type', () => {
+      expect(indexFinder.isPrimaryKey(['hash', 'range'], ['str', new Buffer('a')])).toBeFalsy();
     });
   });
 });

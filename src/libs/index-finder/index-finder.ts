@@ -33,7 +33,8 @@ export class IndexFinder implements IIndexFinder {
   }
 
   isPrimaryKey(keys: string[], values: Array<string | number | Buffer>) {
-    if (keys.length !== this.primaryLength) throw new DynamoSchemaError('key length miss match!');
+    if (keys.length !== this.primaryLength || keys.length !== values.length)
+      throw new DynamoSchemaError('key length miss match!');
     let sortKey = this.primaryLength === 1;
     let hashKey = false;
 
