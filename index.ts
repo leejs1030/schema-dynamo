@@ -1,5 +1,5 @@
 import { GetSchema } from './src/schema/get/get-schema';
-import { SchemaDynamo } from './src/libs/orm/schema-dynamo';
+import { SchemaDynamo } from './src/libs/schema-dynamo/schema-dynamo';
 import { Operator } from './src/typing/typing';
 
 const AWS_REGION = 'local-env';

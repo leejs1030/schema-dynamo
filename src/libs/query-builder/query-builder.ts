@@ -1,6 +1,6 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { ParseSchema } from '../../schema/parse/parse-schema';
-import { IndexFinder } from './index-finder';
+import { IndexFinder } from '../index-finder/index-finder';
 import { AllowedKeyTypes, DynamoIndex, FindInput, Operator, PrimaryKey } from '../../typing/typing';
 import { DynamoSchemaError } from '../../errors';
 

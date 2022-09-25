@@ -1,7 +1,7 @@
 import { DocumentConnection } from '../../connection/document-connection';
 import { DbConnection } from '../../connection/db-connection';
 import { ClientConfiguration, DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { Orm } from './orm';
+import { Orm } from '../orm/orm';
 
 export class SchemaDynamo {
   private readonly documentClient: DocumentConnection;

@@ -2,7 +2,7 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { DbConnection } from '../../connection/db-connection';
 import { DocumentConnection } from '../../connection/document-connection';
 import { AllowedKeyTypes, FindInput } from '../../typing/typing';
-import { QueryBuilder } from './query-builder';
+import { QueryBuilder } from '../query-builder/query-builder';
 
 export class Orm {
   private readonly queryBuilder: QueryBuilder;
