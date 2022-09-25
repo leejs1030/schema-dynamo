@@ -1,6 +1,6 @@
 export interface PrimaryKey {
-  hashKey: { name: string; dataType: string };
-  sortKey?: { name: string; dataType: string };
+  hashKey: { name: string; dataType: 'S' | 'N' | 'B' };
+  sortKey?: { name: string; dataType: 'S' | 'N' | 'B' };
 }
 
 export interface DynamoIndex extends PrimaryKey {
