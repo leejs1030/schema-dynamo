@@ -46,4 +46,12 @@ export class IndexFinder implements IIndexFinder {
 
     return sortKey && hashKey;
   }
+
+  findPossibleIndex(keys: string[], values: Array<string | number | Buffer>): string[] {
+    return [];
+  }
+
+  isIndex(keys: string[], values: Array<string | number | Buffer>): boolean {
+    return false;
+  }
 }
