@@ -51,7 +51,8 @@ export class IndexFinder implements IIndexFinder {
     return [];
   }
 
-  private findIndexByName(name: string | DynamoIndex | PrimaryKey) {
+  private findIndexByName(name?: string | DynamoIndex | PrimaryKey) {
+    if (!name) return this.primaryKey;
     if (typeof name !== 'string') return name;
     const global = this.globalIndex.filter(({ indexName }) => indexName === name);
     if (global.length) return global[0];
@@ -63,7 +64,7 @@ export class IndexFinder implements IIndexFinder {
   getMatchingScore(
     keys: string[],
     values: Array<string | number | Buffer>,
-    indexName: string | DynamoIndex | PrimaryKey,
+    indexName?: string | DynamoIndex | PrimaryKey,
   ): number {
     return 1;
   }

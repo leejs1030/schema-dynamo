@@ -6,7 +6,7 @@ export interface IIndexFinder {
   getMatchingScore(
     keys: string[],
     values: Array<string | number | Buffer>,
-    indexName: string | DynamoIndex | PrimaryKey,
+    indexName?: string | DynamoIndex | PrimaryKey,
   ): number;
 
   findPossibleIndex(keys: string[], values: Array<string | number | Buffer>): string[];
