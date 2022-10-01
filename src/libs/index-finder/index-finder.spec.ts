@@ -59,23 +59,23 @@ describe('IndexFinder', () => {
 
   describe('findPossibleIndex', () => {
     it('find only lsi by pk', () => {
-      expect(indexFinder.findPossibleIndexList(['hash'], ['str'])).toStrictEqual([
-        { name: 'lsi1', score: 2 },
-        { name: 'lsi2', score: 2 },
+      expect(indexFinder.findPossibleIndexList(['hash'], ['str'])).toMatchObject([
+        { indexName: 'lsi1', score: 2 },
+        { indexName: 'lsi2', score: 2 },
       ]);
-      expect(indexFinder.findPossibleIndexList(['hash', 'range'], ['str', 1])).toStrictEqual([
-        { name: 'lsi1', score: 2 },
-        { name: 'lsi2', score: 2 },
+      expect(indexFinder.findPossibleIndexList(['hash', 'range'], ['str', 1])).toMatchObject([
+        { indexName: 'lsi1', score: 2 },
+        { indexName: 'lsi2', score: 2 },
       ]);
     });
 
     it('cannot find by only range key', () => {
-      expect(indexFinder.findPossibleIndexList(['gsi2-range'], [1])).toStrictEqual([]);
+      expect(indexFinder.findPossibleIndexList(['gsi2-range'], [1])).toMatchObject([]);
     });
 
     it('find indices with non-index addition attributes', () => {
-      expect(indexFinder.findPossibleIndexList(['gsi1-hash', 'asdf'], ['str', 3])).toStrictEqual([
-        { name: 'gsi1', score: 2 },
+      expect(indexFinder.findPossibleIndexList(['gsi1-hash', 'asdf'], ['str', 3])).toMatchObject([
+        { indexName: 'gsi1', score: 2 },
       ]);
     });
 
@@ -90,11 +90,11 @@ describe('IndexFinder', () => {
         'lsi1-range',
       ];
       const values = ['str', 'str', 'a', 'a', new Buffer(1), 3, 7];
-      expect(indexFinder.findPossibleIndexList(keys, values)).toStrictEqual([
-        { name: 'lsi1', score: 3 },
-        { name: 'lsi2', score: 2 },
-        { name: 'gsi1', score: 3 },
-        { name: 'gsi3', score: 2 },
+      expect(indexFinder.findPossibleIndexList(keys, values)).toMatchObject([
+        { indexName: 'lsi1', score: 3 },
+        { indexName: 'lsi2', score: 2 },
+        { indexName: 'gsi1', score: 3 },
+        { indexName: 'gsi3', score: 2 },
       ]);
     });
 

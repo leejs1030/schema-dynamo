@@ -1,5 +1,5 @@
 import { DynamoSchemaError } from '../../errors';
-import { DynamoIndex, IndexNameScore, PrimaryKey } from '../../typing/typing';
+import { DynamoIndex, IndexScore, PrimaryKey } from '../../typing/typing';
 import { IIndexFinder } from './i-index-finder';
 
 export class IndexFinder implements IIndexFinder {
@@ -52,18 +52,18 @@ export class IndexFinder implements IIndexFinder {
     keys: string[],
     values: Array<string | number | Buffer>,
     indices: DynamoIndex[],
-  ): IndexNameScore[] {
+  ): IndexScore[] {
     return indices.map((val) => ({
-      name: val.indexName,
+      ...val,
       score: this.getIndexMatchingScore(keys, values, val),
     }));
   }
 
-  private filterByScore(scores: IndexNameScore[]) {
+  private filterByScore(scores: IndexScore[]) {
     return scores.filter(({ score }) => score > 1);
   }
 
-  findPossibleIndexList(keys: string[], values: Array<string | number | Buffer>): IndexNameScore[] {
+  findPossibleIndexList(keys: string[], values: Array<string | number | Buffer>): IndexScore[] {
     if (keys.length !== values.length) throw new DynamoSchemaError('key length miss match!');
     const globalScores = this.getIndexNameScore(keys, values, this.globalIndexList);
     const localScores = this.getIndexNameScore(keys, values, this.localIndexList);
@@ -74,7 +74,7 @@ export class IndexFinder implements IIndexFinder {
     return [...possibleLocal, ...possibleGlobal];
   }
 
-  private getIndexByName(name?: string | DynamoIndex | PrimaryKey) {
+  getIndexByName(name?: string | DynamoIndex | PrimaryKey): PrimaryKey | DynamoIndex {
     if (!name) return this.primaryKey;
     if (typeof name !== 'string') return name;
     const global = this.globalIndexList.filter(({ indexName }) => indexName === name);

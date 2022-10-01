@@ -130,7 +130,6 @@ export interface FindInput {
   forceIndex?: boolean;
 }
 
-export interface IndexNameScore {
-  name: string;
+export interface IndexScore extends DynamoIndex {
   score: number;
 }
