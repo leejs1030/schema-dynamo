@@ -1,13 +1,13 @@
 import { DynamoSchemaError } from '../../errors';
-import { DynamoIndex, PrimaryKey } from '../../typing/typing';
+import { DynamoIndex, IndexNameScore, PrimaryKey } from '../../typing/typing';
 import { IIndexFinder } from './i-index-finder';
 
 export class IndexFinder implements IIndexFinder {
   private readonly primaryLength: number;
   constructor(
     private readonly primaryKey: PrimaryKey,
-    private readonly globalIndex?: DynamoIndex[],
-    private readonly localIndex?: DynamoIndex[],
+    private readonly globalIndexList?: DynamoIndex[],
+    private readonly localIndexList?: DynamoIndex[],
   ) {
     this.primaryLength = primaryKey.sortKey.name ? 2 : 1;
   }
@@ -48,16 +48,38 @@ export class IndexFinder implements IIndexFinder {
     return sortKey && hashKey;
   }
 
-  findPossibleIndex(keys: string[], values: Array<string | number | Buffer>): string[] {
-    return [];
+  private getIndexNameScore(
+    keys: string[],
+    values: Array<string | number | Buffer>,
+    indices: DynamoIndex[],
+  ): IndexNameScore[] {
+    return indices.map((val) => ({
+      name: val.indexName,
+      score: this.getIndexMatchingScore(keys, values, val),
+    }));
+  }
+
+  private filterByScore(scores: IndexNameScore[]) {
+    return scores.filter(({ score }) => score > 1);
+  }
+
+  findPossibleIndexList(keys: string[], values: Array<string | number | Buffer>): IndexNameScore[] {
+    if (keys.length !== values.length) throw new DynamoSchemaError('key length miss match!');
+    const globalScores = this.getIndexNameScore(keys, values, this.globalIndexList);
+    const localScores = this.getIndexNameScore(keys, values, this.localIndexList);
+
+    const possibleGlobal = this.filterByScore(globalScores);
+    const possibleLocal = this.filterByScore(localScores);
+
+    return [...possibleLocal, ...possibleGlobal];
   }
 
   private getIndexByName(name?: string | DynamoIndex | PrimaryKey) {
     if (!name) return this.primaryKey;
     if (typeof name !== 'string') return name;
-    const global = this.globalIndex.filter(({ indexName }) => indexName === name);
+    const global = this.globalIndexList.filter(({ indexName }) => indexName === name);
     if (global.length) return global[0];
-    const local = this.localIndex.filter(({ indexName }) => indexName === name);
+    const local = this.localIndexList.filter(({ indexName }) => indexName === name);
     if (local.length) return local[0];
     return null;
   }

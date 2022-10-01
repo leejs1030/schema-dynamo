@@ -129,3 +129,8 @@ export interface FindInput {
   indexName?: string;
   forceIndex?: boolean;
 }
+
+export interface IndexNameScore {
+  name: string;
+  score: number;
+}
