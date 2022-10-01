@@ -28,7 +28,8 @@ export class IndexFinder implements IIndexFinder {
 
   private isSortKey(keyName: string, keyValue: string | number | Buffer, keySchema: PrimaryKey) {
     return (
-      keySchema.sortKey.name === keyName && this.isAllowedType(keyValue, keySchema.sortKey.dataType)
+      keySchema.sortKey?.name === keyName &&
+      this.isAllowedType(keyValue, keySchema.sortKey.dataType)
     );
   }
 
@@ -51,21 +52,51 @@ export class IndexFinder implements IIndexFinder {
     return [];
   }
 
-  private findIndexByName(name?: string | DynamoIndex | PrimaryKey) {
+  private getIndexByName(name?: string | DynamoIndex | PrimaryKey) {
     if (!name) return this.primaryKey;
     if (typeof name !== 'string') return name;
     const global = this.globalIndex.filter(({ indexName }) => indexName === name);
     if (global.length) return global[0];
-    const local = this.globalIndex.filter(({ indexName }) => indexName === name);
+    const local = this.localIndex.filter(({ indexName }) => indexName === name);
     if (local.length) return local[0];
     return null;
   }
 
-  getMatchingScore(
+  private getScoreFromIndex(
+    keys: string[],
+    values: Array<string | number | Buffer>,
+    index: PrimaryKey,
+  ) {
+    return keys.reduce((acc, cur, idx) => {
+      const isHash = this.isHashKey(cur, values[idx], index) as any as number;
+      const isSort = this.isSortKey(cur, values[idx], index) as any as number;
+      acc = acc ^ (isHash << 1) ^ isSort;
+      return acc;
+    }, 0);
+  }
+
+  /**
+   *
+   * @param keys
+   * @param values
+   * @param indexName
+   *
+   * @return number
+   * 0 if no matching
+   * 1 if sort key matching
+   * 2 if hash key matching
+   * 3 if hash key + sort key matching
+   */
+  getIndexMatchingScore(
     keys: string[],
     values: Array<string | number | Buffer>,
     indexName?: string | DynamoIndex | PrimaryKey,
   ): number {
-    return 1;
+    if (keys.length !== values.length) throw new DynamoSchemaError('key length miss match!');
+
+    const index = this.getIndexByName(indexName);
+    if (!index) return 0;
+
+    return this.getScoreFromIndex(keys, values, index);
   }
 }
