@@ -57,7 +57,51 @@ describe('IndexFinder', () => {
     });
   });
 
-  describe('findPossibleIndex', () => {});
+  describe('findPossibleIndex', () => {
+    it('find only lsi by pk', () => {
+      expect(indexFinder.findPossibleIndexList(['hash'], ['str'])).toStrictEqual([
+        { name: 'lsi1', score: 2 },
+        { name: 'lsi2', score: 2 },
+      ]);
+      expect(indexFinder.findPossibleIndexList(['hash', 'range'], ['str', 1])).toStrictEqual([
+        { name: 'lsi1', score: 2 },
+        { name: 'lsi2', score: 2 },
+      ]);
+    });
+
+    it('cannot find by only range key', () => {
+      expect(indexFinder.findPossibleIndexList(['gsi2-range'], [1])).toStrictEqual([]);
+    });
+
+    it('find indices with non-index addition attributes', () => {
+      expect(indexFinder.findPossibleIndexList(['gsi1-hash', 'asdf'], ['str', 3])).toStrictEqual([
+        { name: 'gsi1', score: 2 },
+      ]);
+    });
+
+    it('find multiple possible indices', () => {
+      const keys = [
+        'gsi1-hash',
+        'gsi2-hash',
+        'hash',
+        'lsi1-range',
+        'gsi3-hash',
+        'gsi1-range',
+        'lsi1-range',
+      ];
+      const values = ['str', 'str', 'a', 'a', new Buffer(1), 3, 7];
+      expect(indexFinder.findPossibleIndexList(keys, values)).toStrictEqual([
+        { name: 'lsi1', score: 3 },
+        { name: 'lsi2', score: 2 },
+        { name: 'gsi1', score: 3 },
+        { name: 'gsi3', score: 2 },
+      ]);
+    });
+
+    it('not matching error', () => {
+      expect(() => indexFinder.findPossibleIndexList(['a'], [])).toThrow();
+    });
+  });
 
   describe('getMatchingScore', () => {
     it('correct matching local index', () => {
