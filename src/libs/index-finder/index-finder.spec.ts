@@ -137,7 +137,7 @@ describe('IndexFinder', () => {
     });
 
     it('cant match with only range key', () => {
-      expect(indexFinder.getIndexMatchingScore(['range'], [3])).toBe(1);
+      expect(indexFinder.getIndexMatchingScore(['range'], [3])).toBe(0);
     });
 
     it('no matching column for index', () => {
@@ -165,7 +165,7 @@ describe('IndexFinder', () => {
       );
       expect(
         indexFinder.getIndexMatchingScore(['gsi1-range', 'strange'], [3, 'asdf'], 'gsi1'),
-      ).toBe(1);
+      ).toBe(0);
     });
   });
 });

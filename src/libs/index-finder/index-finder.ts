@@ -93,7 +93,7 @@ export class IndexFinder implements IIndexFinder {
       const isHash = this.isHashKey(cur, values[idx], index) as any as number;
       const isSort = this.isSortKey(cur, values[idx], index) as any as number;
       acc = acc ^ (isHash << 1) ^ isSort;
-      return acc;
+      return acc > 1 ? acc : 0;
     }, 0);
   }
 
