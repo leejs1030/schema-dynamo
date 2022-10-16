@@ -1,7 +1,15 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { ParseSchema } from '../../schema/parse/parse-schema';
 import { IndexFinder } from '../index-finder/index-finder';
-import { AllowedKeyTypes, DynamoIndex, FindInput, Operator, PrimaryKey } from '../../typing/typing';
+import {
+  AllowedKeyTypes,
+  DynamoIndex,
+  DynamoIndexKeyType,
+  DynamoIndexScore,
+  FindInput,
+  Operator,
+  PrimaryKey,
+} from '../../typing/typing';
 import { DynamoSchemaError } from '../../errors';
 import { IQueryBuilder } from './i-query-builder';
 import { IIndexFinder } from '../index-finder/i-index-finder';
@@ -35,6 +43,55 @@ export class QueryBuilder implements IQueryBuilder {
       throw new DynamoSchemaError('this is not primary key!');
 
     return { TableName: this.tableName, Key: where };
+  }
+
+  private removeDuplicates(indices: DynamoIndexScore[]): DynamoIndexScore[] {
+    const scoreMap = indices.reduce((acc, cur) => {
+      acc[cur.indexName] = cur.indexScore;
+      return acc;
+    }, {});
+
+    return indices.filter((index) => scoreMap[index.indexName] !== index.indexScore);
+  }
+
+  private isSameKey(key1: DynamoIndexKeyType, key2: DynamoIndexKeyType) {
+    return !key1 && !key2 && key1.name === key2.name && key1.dataType === key2.dataType;
+  }
+
+  private compareIndices(index1: DynamoIndexScore, index2: DynamoIndexScore): DynamoIndexScore[] {
+    // TODO: 가산점 정책 수립 필요
+    if (this.isSameKey(index1.hashKey, index2.hashKey)) {
+      if (this.isSameKey(index1.sortKey, index2.sortKey))
+        return [{ ...index1, indexScore: index1.indexScore + index2.indexScore }];
+      return [{ ...index1, indexScore: index1.indexScore + index2.indexScore }];
+    }
+
+    return [{ ...index1 }, { ...index2 }];
+  }
+
+  private mergeIndices(indices: [DynamoIndexScore[], DynamoIndexScore[]]): DynamoIndexScore[] {
+    const l1 = indices[0].length;
+    const l2 = indices[1].length;
+    let result: DynamoIndexScore[] = [];
+
+    for (let i = 0; i < l1; i++) {
+      for (let j = 0; j < l2; j++) {
+        const tmp = this.compareIndices(indices[0][i], indices[1][j]);
+        result = result.concat(tmp);
+      }
+    }
+
+    return this.removeDuplicates(result);
+  }
+
+  // TODO: 함수 이름 변경
+  private integrateDynamoIndexScore(indices: DynamoIndexScore[][]): DynamoIndexScore[] | null {
+    if (indices.length === 2) return this.mergeIndices([indices[0], indices[1]]);
+
+    return this.integrateDynamoIndexScore([
+      this.integrateDynamoIndexScore([indices[0], indices[1]]),
+      ...indices.slice(2),
+    ]);
   }
 
   buildFindManyParams(params: FindInput): DocumentClient.QueryInput | DocumentClient.ScanInput {

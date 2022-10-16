@@ -1,10 +1,19 @@
+export interface DynamoIndexKeyType {
+  name: string;
+  dataType: 'S' | 'N' | 'B';
+}
+
 export interface PrimaryKey {
-  hashKey: { name: string; dataType: 'S' | 'N' | 'B' };
-  sortKey?: { name: string; dataType: 'S' | 'N' | 'B' };
+  hashKey: DynamoIndexKeyType;
+  sortKey?: DynamoIndexKeyType;
 }
 
 export interface DynamoIndex extends PrimaryKey {
   indexName: string;
+}
+
+export interface DynamoIndexScore extends DynamoIndex {
+  indexScore: number;
 }
 
 export type AllowedKeyTypes = string | number | Buffer;
