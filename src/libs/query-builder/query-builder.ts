@@ -5,7 +5,7 @@ import {
   AllowedKeyTypes,
   DynamoIndex,
   DynamoIndexKeyType,
-  DynamoIndexScore,
+  IndexScore,
   FindInput,
   Operator,
   PrimaryKey,
@@ -45,34 +45,34 @@ export class QueryBuilder implements IQueryBuilder {
     return { TableName: this.tableName, Key: where };
   }
 
-  private removeDuplicates(indices: DynamoIndexScore[]): DynamoIndexScore[] {
+  private removeDuplicates(indices: IndexScore[]): IndexScore[] {
     const scoreMap = indices.reduce((acc, cur) => {
-      acc[cur.indexName] = cur.indexScore;
+      acc[cur.indexName] = cur.score;
       return acc;
     }, {});
 
-    return indices.filter((index) => scoreMap[index.indexName] !== index.indexScore);
+    return indices.filter((index) => scoreMap[index.indexName] !== index.score);
   }
 
   private isSameKey(key1: DynamoIndexKeyType, key2: DynamoIndexKeyType) {
     return !key1 && !key2 && key1.name === key2.name && key1.dataType === key2.dataType;
   }
 
-  private compareIndices(index1: DynamoIndexScore, index2: DynamoIndexScore): DynamoIndexScore[] {
+  private compareIndices(index1: IndexScore, index2: IndexScore): IndexScore[] {
     // TODO: 가산점 정책 수립 필요
     if (this.isSameKey(index1.hashKey, index2.hashKey)) {
       if (this.isSameKey(index1.sortKey, index2.sortKey))
-        return [{ ...index1, indexScore: index1.indexScore + index2.indexScore }];
-      return [{ ...index1, indexScore: index1.indexScore + index2.indexScore }];
+        return [{ ...index1, score: index1.score + index2.score }];
+      return [{ ...index1, score: index1.score + index2.score }];
     }
 
     return [{ ...index1 }, { ...index2 }];
   }
 
-  private mergeIndices(indices: [DynamoIndexScore[], DynamoIndexScore[]]): DynamoIndexScore[] {
+  private mergeIndices(indices: [IndexScore[], IndexScore[]]): IndexScore[] {
     const l1 = indices[0].length;
     const l2 = indices[1].length;
-    let result: DynamoIndexScore[] = [];
+    let result: IndexScore[] = [];
 
     for (let i = 0; i < l1; i++) {
       for (let j = 0; j < l2; j++) {
@@ -85,11 +85,11 @@ export class QueryBuilder implements IQueryBuilder {
   }
 
   // TODO: 함수 이름 변경
-  private integrateDynamoIndexScore(indices: DynamoIndexScore[][]): DynamoIndexScore[] | null {
+  private integrateIndexScore(indices: IndexScore[][]): IndexScore[] | null {
     if (indices.length === 2) return this.mergeIndices([indices[0], indices[1]]);
 
-    return this.integrateDynamoIndexScore([
-      this.integrateDynamoIndexScore([indices[0], indices[1]]),
+    return this.integrateIndexScore([
+      this.integrateIndexScore([indices[0], indices[1]]),
       ...indices.slice(2),
     ]);
   }

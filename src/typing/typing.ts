@@ -12,8 +12,8 @@ export interface DynamoIndex extends PrimaryKey {
   indexName: string;
 }
 
-export interface DynamoIndexScore extends DynamoIndex {
-  indexScore: number;
+export interface IndexScore extends DynamoIndex {
+  score: number;
 }
 
 export type AllowedKeyTypes = string | number | Buffer;
@@ -137,8 +137,4 @@ export interface FindInput {
   resultLimit?: number;
   indexName?: string;
   forceIndex?: boolean;
-}
-
-export interface IndexScore extends DynamoIndex {
-  score: number;
 }
